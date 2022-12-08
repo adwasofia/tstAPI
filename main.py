@@ -14,3 +14,5 @@ def show(id):
 @app.get('/blog/{id}/comments')
 def comments(id):
     return {'data': {'1', '2'}}
+
+#@app.post('/user')
