@@ -12,5 +12,6 @@ class Song(Base):
 
 class User(Base):
     __tablename__ = 'users'
-    username = Column(String, primary_key=True, index=True)
+    id = Column(Integer, index=True, primary_key=True)
+    username = Column(String, primary_key=True)
     password = Column(String)

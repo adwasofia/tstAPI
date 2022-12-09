@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 class Song(BaseModel):
-    id: int
     track_name: str
     artist_name: str
     genre: str
@@ -12,5 +11,13 @@ class User(BaseModel):
     username: str
     password: str
 
-class ShowSong(Song):
-    pass
+class ShowSong(BaseModel):
+    track_name: str
+    artist_name: str
+    class Config():
+        orm_mode = True
+
+class ShowUser(BaseModel):
+    username: str
+    class Config():
+        orm_mode = True
