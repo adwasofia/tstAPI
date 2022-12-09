@@ -69,16 +69,16 @@ def get_song_by_id (id, response : Response, db : Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = f'Song with id {id} does not exist')
     return song
 
-@app.get('/recs/{weather}', status_code=status.HTTP_200_OK)
-def get_recs (weather, db : Session = Depends(get_db)):
+@app.get('/recs/{weather}', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowSong])
+def get_5_most_popular_and_relevant_songs_recommendation (weather, db : Session = Depends(get_db)):
     if (weather == 'cloudy'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute <= 110).order_by(models.Song.popularity.desc()).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute <= 110).order_by(models.Song.popularity.desc()).limit(5).all()
     elif (weather == 'windy'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 111, models.Song.beats_per_minute <= 137).order_by(models.Song.popularity.desc()).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 111, models.Song.beats_per_minute <= 137).order_by(models.Song.popularity.desc()).limit(5).all()
     elif (weather == 'rainy'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 138, models.Song.beats_per_minute <= 164).order_by(models.Song.popularity.desc()).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 138, models.Song.beats_per_minute <= 164).order_by(models.Song.popularity.desc()).limit(5).all()
     elif (weather == 'sunny'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 165).order_by(models.Song.popularity.desc()).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 165).order_by(models.Song.popularity.desc()).limit(5).all()
     else:
         songs = 'Failed getting songs recommendation. Input must be sunny/windy/cloudy/rainy.'
     return songs
