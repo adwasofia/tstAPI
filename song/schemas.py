@@ -11,3 +11,6 @@ class Song(BaseModel):
 class User(BaseModel):
     username: str
     password: str
+
+class ShowSong(Song):
+    pass
