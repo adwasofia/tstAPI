@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from .hashing import Hash
 from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy import or_
 
 app = FastAPI()
 
@@ -72,13 +73,13 @@ def get_song_by_id (id, response : Response, db : Session = Depends(get_db)):
 @app.get('/recs/{weather}', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowSong])
 def get_5_most_popular_and_relevant_songs_recommendation (weather, db : Session = Depends(get_db)):
     if (weather == 'cloudy'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute <= 110).order_by(models.Song.popularity.desc()).limit(5).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute <= 110, or_(models.Song.genre == 'brostep', models.Song.genre == 'edm', models.Song.genre == 'r&b en espanol', models.Song.genre == 'atl hip hop', models.Song.genre == 'australian pop')).order_by(models.Song.popularity.desc()).limit(5).all()
     elif (weather == 'windy'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 111, models.Song.beats_per_minute <= 137).order_by(models.Song.popularity.desc()).limit(5).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 111, models.Song.beats_per_minute <= 137, or_(models.Song.genre == 'pop', models.Song.genre == 'electropop', models.Song.genre == 'canadian hip hop', models.Song.genre == 'big room')).order_by(models.Song.popularity.desc()).limit(5).all()
     elif (weather == 'rainy'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 138, models.Song.beats_per_minute <= 164).order_by(models.Song.popularity.desc()).limit(5).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 138, models.Song.beats_per_minute <= 164, or_(models.Song.genre == 'boyband', models.Song.genre == 'escape room', models.Song.genre == 'country rap', models.Song.genre == 'dfw rap')).order_by(models.Song.popularity.desc()).limit(5).all()
     elif (weather == 'sunny'):
-        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 165).order_by(models.Song.popularity.desc()).limit(5).all()
+        songs = db.query(models.Song).filter(models.Song.beats_per_minute >= 165, or_(models.Song.genre == 'dance pop', models.Song.genre == 'latin', models.Song.genre == 'reggaeton flow', models.Song.genre == 'panamanian pop')).order_by(models.Song.popularity.desc()).limit(5).all()
     else:
         songs = 'Failed getting songs recommendation. Input must be sunny/windy/cloudy/rainy.'
     return songs
